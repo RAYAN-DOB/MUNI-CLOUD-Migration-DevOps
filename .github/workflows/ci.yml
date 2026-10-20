@@ -20,6 +20,8 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Vérifier la syntaxe Compose
         run: docker compose -f compose.yaml config --quiet
+      - name: Vérifier le lab trois services
+        run: docker compose -f lab/compose.pilotes.yaml config --quiet
       - name: Construire l'image
         run: docker build -t muni-cloud/portail:ci .
   publish-staging:
