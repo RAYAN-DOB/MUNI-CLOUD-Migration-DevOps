@@ -35,15 +35,15 @@ jobs:
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: \${{ github.actor }}
-          password: \${{ secrets.GITHUB_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
             ghcr.io/rayan-dob/muni-cloud-migration-devops:staging
-            ghcr.io/rayan-dob/muni-cloud-migration-devops:sha-\${{ github.sha }}
+            ghcr.io/rayan-dob/muni-cloud-migration-devops:sha-${{ github.sha }}
   deploy-staging:
     if: github.ref == 'refs/heads/main' && vars.ENABLE_STAGING_DEPLOY == 'true'
     needs: publish-staging
@@ -52,8 +52,8 @@ jobs:
     steps:
       - name: Préparer SSH (host key fournie hors dépôt)
         env:
-          KEY: \${{ secrets.STAGING_SSH_KEY }}
-          KNOWN: \${{ secrets.STAGING_KNOWN_HOSTS }}
+          KEY: ${{ secrets.STAGING_SSH_KEY }}
+          KNOWN: ${{ secrets.STAGING_KNOWN_HOSTS }}
         run: |
           set -eu
           umask 077
@@ -62,8 +62,8 @@ jobs:
           printf '%s\n' "$KNOWN" > ~/.ssh/known_hosts
       - name: Déployer sur VM de PRÉPRODUCTION uniquement
         env:
-          HOST: \${{ secrets.STAGING_HOST }}
-          USER: \${{ secrets.STAGING_USER }}
+          HOST: ${{ secrets.STAGING_HOST }}
+          USER: ${{ secrets.STAGING_USER }}
         run: |
           set -eu
           ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
