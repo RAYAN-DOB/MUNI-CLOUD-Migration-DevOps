@@ -2,7 +2,7 @@
 # Usage: MUNI_IMAGE=ghcr.io/...:sha-FULLSHA sh scripts/deploy_staging.sh
 # Staging only. Configure Docker login, folder and backup before running.
 set -eu
-: "\${MUNI_IMAGE:?Spécifier MUNI_IMAGE avec un tag sha-immuable}"
+: "${MUNI_IMAGE:?Spécifier MUNI_IMAGE avec un tag sha-immuable}"
 case "$MUNI_IMAGE" in
   ghcr.io/*:sha-*) ;;
   *) echo "Refus : tag immuable sha- attendu" >&2; exit 2 ;;
