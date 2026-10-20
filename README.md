@@ -28,6 +28,9 @@
 - [Soutenance et recette](docs/09-soutenance.md)
 - [Backlog & répartition](docs/10-backlog.md)
 - [Budget, communication et gouvernance](docs/11-gouvernance.md)
+- [Laboratoire reproductible de 3 services (VM / conteneurs)](lab/README.md)
+- [Automatisation VM par Ansible (optionnelle)](infra/ansible/README.md)
+- [Matrice de traçabilité et critères de recette](docs/12-tracabilite.md)
 - [Modèles de fichiers](templates/) et [scripts](scripts/)
 - [Politique de sécurité](SECURITY.md) · [Contributions](CONTRIBUTING.md)
 
