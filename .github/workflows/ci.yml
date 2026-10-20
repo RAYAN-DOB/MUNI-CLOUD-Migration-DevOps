@@ -1,0 +1,70 @@
+name: CI - Tests, Docker et image de staging
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tests automatisés
+        run: python -m unittest discover -s tests -v
+      - name: Vérifier la syntaxe Compose
+        run: docker compose -f compose.yaml config --quiet
+      - name: Construire l'image
+        run: docker build -t muni-cloud/portail:ci .
+  publish-staging:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: \${{ github.actor }}
+          password: \${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/rayan-dob/muni-cloud-migration-devops:staging
+            ghcr.io/rayan-dob/muni-cloud-migration-devops:sha-\${{ github.sha }}
+  deploy-staging:
+    if: github.ref == 'refs/heads/main' && vars.ENABLE_STAGING_DEPLOY == 'true'
+    needs: publish-staging
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Préparer SSH (host key fournie hors dépôt)
+        env:
+          KEY: \${{ secrets.STAGING_SSH_KEY }}
+          KNOWN: \${{ secrets.STAGING_KNOWN_HOSTS }}
+        run: |
+          set -eu
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN" > ~/.ssh/known_hosts
+      - name: Déployer sur VM de PRÉPRODUCTION uniquement
+        env:
+          HOST: \${{ secrets.STAGING_HOST }}
+          USER: \${{ secrets.STAGING_USER }}
+        run: |
+          set -eu
+          ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
+            'cd /opt/muni-cloud && docker compose -f compose.staging.yaml pull && docker compose -f compose.staging.yaml up -d && docker compose -f compose.staging.yaml ps'
