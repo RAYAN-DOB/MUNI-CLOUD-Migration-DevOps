@@ -1,0 +1,13 @@
+# Fiche de changement — CHG-XXXX
+- Service :
+- Responsable :
+- Date/heure :
+- Approbation tuteur (si réel) :
+- Version et environnement avant :
+- Version et environnement après :
+- Sauvegarde vérifiée / référence privée :
+- Plan de bascule :
+- Vérifications :
+- Conditions de rollback :
+- Durée / impact :
+- Décision et signature :
