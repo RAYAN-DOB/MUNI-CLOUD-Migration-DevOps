@@ -1,0 +1,17 @@
+# Fiche de service pilote
+- Nom fictif :
+- Rôle :
+- OS et version témoin :
+- Dépendances applicatives :
+- Base de données :
+- Stockage persistant :
+- Ports et flux :
+- Authentification :
+- Confidentialité (fictif/public) :
+- Compatibilité conteneur confirmée ?
+- Critère de recette :
+- Mesures AVANT :
+- Sauvegarde et restauration :
+- Risques :
+- Responsable :
+- Décision pilote :

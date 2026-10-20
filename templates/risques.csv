@@ -1,0 +1,5 @@
+id,risque,probabilite_1_5,impact_1_5,criticite,mesure_preventive,plan_secours,responsable,statut
+R01,Indisponibilité de service,3,5,15,Sauvegarde et bascule testée,Rollback de laboratoire,À désigner,ouvert
+R02,Perte de données,2,5,10,Volumes persistants et restauration testée,Restaurer backup,À désigner,ouvert
+R03,Secrets exposés,3,5,15,Revue et secrets hors Git,Révoquer et remplacer,À désigner,ouvert
+R04,Mesures non comparables,4,4,16,Charge identique et 3 essais,Refaire tests,À désigner,ouvert
