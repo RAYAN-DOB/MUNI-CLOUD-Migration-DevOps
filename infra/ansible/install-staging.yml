@@ -1,0 +1,40 @@
+---
+- name: Préparer une VM staging Debian - jamais l'hyperviseur
+  hosts: muni_staging
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Vérifier la distribution ciblée
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['distribution'] == "Debian"
+        fail_msg: "Ce playbook ne gère que Debian en VM autorisée."
+    - name: Installer les paquets Docker de la distribution
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - docker.io
+          - docker-compose-v2
+        state: present
+    - name: Activer Docker
+      ansible.builtin.service:
+        name: docker
+        enabled: true
+        state: started
+    - name: Créer le dossier staging
+      ansible.builtin.file:
+        path: /opt/muni-cloud
+        state: directory
+        mode: "0750"
+        owner: root
+        group: root
+    - name: Copier la configuration staging
+      ansible.builtin.copy:
+        src: ../../compose.staging.yaml
+        dest: /opt/muni-cloud/compose.staging.yaml
+        mode: "0640"
+        owner: root
+        group: root
+    - name: Signaler la préparation terminée
+      ansible.builtin.debug:
+        msg: "VM préparée. Configuration GHCR/SSH et activation staging encore nécessaires."
