@@ -1,0 +1,16 @@
+[Unit]
+Description=MUNI-CLOUD Fictional Intranet - VM baseline only
+After=network-online.target
+[Service]
+Type=simple
+User=muni-lab
+Group=muni-lab
+WorkingDirectory=/opt/muni-cloud
+ExecStart=/usr/bin/python3 -m http.server 8081 --bind 127.0.0.1 --directory /opt/muni-cloud/lab/intranet
+Restart=on-failure
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+[Install]
+WantedBy=multi-user.target

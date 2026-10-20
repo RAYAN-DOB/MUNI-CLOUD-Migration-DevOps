@@ -1,0 +1,39 @@
+name: muni-cloud-pilotes
+services:
+  portail:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: muni-cloud/portail:local
+    restart: unless-stopped
+    ports: ["127.0.0.1:8080:8080"]
+    read_only: true
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 80
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=2)"]
+      interval: 20s
+      timeout: 3s
+      retries: 3
+  intranet:
+    image: nginxinc/nginx-unprivileged:stable-alpine
+    restart: unless-stopped
+    ports: ["127.0.0.1:8081:8080"]
+    volumes:
+      - ./intranet/index.html:/usr/share/nginx/html/index.html:ro
+    read_only: true
+    tmpfs: ["/tmp:size=16m", "/var/cache/nginx:size=16m"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+  wiki:
+    image: nginxinc/nginx-unprivileged:stable-alpine
+    restart: unless-stopped
+    ports: ["127.0.0.1:8082:8080"]
+    volumes:
+      - ./wiki/index.html:/usr/share/nginx/html/index.html:ro
+    read_only: true
+    tmpfs: ["/tmp:size=16m", "/var/cache/nginx:size=16m"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
