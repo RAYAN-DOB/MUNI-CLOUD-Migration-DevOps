@@ -55,6 +55,12 @@ Depuis ton PC : tunnel SSH sécurisé :
     ssh -L 8080:127.0.0.1:8080 utilisateur@IP_VM
     # puis ouvrir http://127.0.0.1:8080
 
+Le [laboratoire à trois services](lab/README.md) inclut aussi des unités systemd pour l'état AVANT et le Compose pour l'état APRÈS.
+
+Pour simuler **300 requêtes** (ce n'est PAS 300 utilisateurs simultanés), sur le service de **laboratoire local** :
+
+    python3 scripts/load_test.py --requests 300 --workers 10 --output results/load.csv
+
 Pour les tests sans Docker :
 
     python3 -m unittest discover -s tests -v
